@@ -92,6 +92,25 @@ AppAsset::register($this);
                         </li>
                         <li class="sidebar-dropdown">
                             <a href="#">
+                                <i class="icon-user1"></i>
+                                <span class="menu-text"><?= Yii::t('app', 'Kontragent') ?></span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="/contractors"><?= Yii::t('app', 'Kontragentlar') ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="/contractors-tupe"><?= Yii::t('app', 'Kontragentlar turi') ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="/contractors-group"><?= Yii::t('app', 'Kontragentlar-guruhi') ?></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
                                 <i class="icon-domain"></i>
                                 <span class="menu-text"><?= Yii::t('app', 'Ishlab chiqarish') ?></span>
                             </a>
@@ -188,8 +207,6 @@ AppAsset::register($this);
                                         <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
                                     </li>
                                     <li>
-                                        <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
-                                    </li><li>
                                         <a href="/reports/outlay"><?= Yii::t('app', 'Chiqim qilish') ?></a>
                                     </li>
                                 </ul>
