@@ -207,7 +207,10 @@ AppAsset::register($this);
                                         <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
                                     </li>
                                     <li>
-                                        <a href="/reports/outlay"><?= Yii::t('app', 'Chiqim qilish') ?></a>
+                                        <a href="/reports/office-outlay"><?= Yii::t('app', 'Chiqim qilish') ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="/reports/office-debit"><?= Yii::t('app', 'Kirim qilish') ?></a>
                                     </li>
                                 </ul>
                             </div>

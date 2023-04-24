@@ -11,9 +11,23 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Office Outlays'), 'u
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="office-outlay-view">
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?= Yii::t('app', 'Ombor') ?></li>
+        <li class="breadcrumb-item active"><?= $this->title ?></li>
+    </ol>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <ul class="app-actions">
+        <li>
+            <a href="create">
+                <span class="range-text"></span>
+                <i class="icon-plus"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<!-- Page header end -->
+<div class="main-container">
 
     <p>
         <?= Html::a(Yii::t('app', 'Close'), ['/'], ['class' => 'btn btn-warning']) ?>
@@ -32,34 +46,34 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             // 'id',
             [
-                'attribute'=>'user_id',
-                'value'=>function($data){
+                'attribute' => 'user_id',
+                'value' => function ($data) {
                     return $data->user->username;
                 }
             ],
             // 'office_id',
             [
-                'attribute'=>'office_id',
-                'value'=>function($data){
+                'attribute' => 'office_id',
+                'value' => function ($data) {
                     return $data->office->name;
                 }
             ],
             // 'contractor_id',
             [
-                'attribute'=>'contractor_id',
-                'value'=>function($data){
+                'attribute' => 'contractor_id',
+                'value' => function ($data) {
                     return $data->contractor->name;
                 }
             ],
             // 'amount',
             [
-                'attribute'=>'amount',
-                'format'=>'raw',
-                'value'=>function($data){
-                    $ex ="";
-                    if($data->exchange){
+                'attribute' => 'amount',
+                'format' => 'raw',
+                'value' => function ($data) {
+                    $ex = "";
+                    if ($data->exchange) {
                         $ex = Yii::t('app', 'dollar');
-                    }else{
+                    } else {
                         $ex = Yii::t('app', 'so`m');
                     }
                     $amount = number_format($data->amount, 0, ',', ' ');
@@ -67,13 +81,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute'=>'exchange_sum',
-                'format'=>'raw',
-                'value'=>function($data){
-                    $ex ="";
-                    if(!$data->exchange){
+                'attribute' => 'exchange_sum',
+                'format' => 'raw',
+                'value' => function ($data) {
+                    $ex = "";
+                    if (!$data->exchange) {
                         $ex = Yii::t('app', 'dollar');
-                    }else{
+                    } else {
                         $ex = Yii::t('app', 'so`m');
                     }
                     $amount = number_format($data->exchange_sum, 0, ',', ' ');
@@ -83,23 +97,26 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'exchange_sum',
             // 'exchange',
             [
-                'attribute'=>'exchange',
-                'filter' => ['1'=>Yii::t('app', 'dollar'), '0'=>Yii::t('app', 'so`m')],
-                'value'=>function($data){
-                    if($data->exchange){
+                'attribute' => 'exchange',
+                'filter' => ['1' => Yii::t('app', 'dollar'), '0' => Yii::t('app', 'so`m')],
+                'value' => function ($data) {
+                    if ($data->exchange) {
                         return Yii::t('app', 'dollar');
-                    }else{
+                    } else {
                         return Yii::t('app', 'so`m');
                     }
                 }
             ],
-            'comment:ntext',
+            [
+                'attribute'=> 'comment',
+                'format' => 'raw'
+            ],
             // 'user_id',
             'current_rate',
             // 'date',
             [
-                'attribute'=>'date',
-                'value'=>function($data){
+                'attribute' => 'date',
+                'value' => function ($data) {
                     return date("d/m/Y", strtotime($data->date));
                 }
             ],
