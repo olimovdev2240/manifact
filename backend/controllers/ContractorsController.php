@@ -83,6 +83,10 @@ class ContractorsController extends Controller
                 $model->photo = UploadedFile::getInstance($model, 'photo');
                 $model->save();
                 $model->upload();
+                echo "<pre>";
+                print_r($model->getErrors());
+                echo "</pre>";
+                exit();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {

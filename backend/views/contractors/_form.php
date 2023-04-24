@@ -33,22 +33,8 @@ use yii\helpers\ArrayHelper;
                 ],
                 [
                     'label' => Yii::t('app', 'Bog`lamlar'),
-                    'content' => $form->field($model, 'section_id')->widget(Select2::classname(), [
-                        'data' => $section,
-                        'language' => 'ru',
-                        'options' => ['placeholder' => Yii::t('app', 'Select a state ...')],
-                        'pluginOptions' => [
-                            'allowClear' => true
-                        ],
-                    ]).$form->field($model, 'type_id')->widget(Select2::classname(), [
+                    'content' => $form->field($model, 'type_id')->widget(Select2::classname(), [
                         'data' => $type,
-                        'language' => 'ru',
-                        'options' => ['placeholder' => Yii::t('app', 'Select a state ...')],
-                        'pluginOptions' => [
-                            'allowClear' => true
-                        ],
-                    ]).$form->field($model, 'price_type')->widget(Select2::classname(), [
-                        'data' => $price,
                         'language' => 'ru',
                         'options' => ['placeholder' => Yii::t('app', 'Select a state ...')],
                         'pluginOptions' => [

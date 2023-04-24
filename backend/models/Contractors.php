@@ -16,11 +16,8 @@ use Yii;
  * @property string|null $inn INN
  * @property string|null $corporation Tashkiloti
  * @property string|null $mfo_bank Bank MFO
- * @property string $photo Rasm
- * @property int|null $section_id Bo`lim
  * @property int|null $group_id Guruhi
  * @property int $type_id Turi
- * @property int $price_type Narx turi
  * @property int $status Status
  * @property string|null $special Maxsus parametri
  * @property float|null $debt_sum So`mdagi qarzdorlik
@@ -31,8 +28,6 @@ use Yii;
  * @property string|null $bails_tel Kafil raqami
  *
  * @property ContractorsGroup $group
- * @property PricesType $priceType
- * @property Sections $section
  * @property ContractorsType $type
  */
 class Contractors extends \yii\db\ActiveRecord
@@ -51,7 +46,7 @@ class Contractors extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type_id', 'price_type'], 'required'],
+            [['type_id',], 'required'],
             [['address'], 'string'],
             [['section_id', 'group_id', 'type_id', 'price_type', 'status', 'user_id'], 'integer'],
             [['debt_sum', 'debt_usd'], 'number'],
@@ -110,9 +105,9 @@ class Contractors extends \yii\db\ActiveRecord
     public function uploads()
     {
         if ($this->validate()) {
-            $this->photo->saveAs('contractor/' . $this->photo->baseName . '.' . $this->photo->extension);
-            $this->photo_passport->saveAs('contractor/' . $this->photo_passport->baseName . '.' . $this->photo_passport->extension);
-            $this->photo_with_passport->saveAs('contractor/' . $this->photo_with_passport->baseName . '.' . $this->photo_with_passport->extension);
+            $this->photo->saveAs('/contractor/' . $this->photo->baseName . '.' . $this->photo->extension);
+            $this->photo_passport->saveAs('/contractor/' . $this->photo_passport->baseName . '.' . $this->photo_passport->extension);
+            $this->photo_with_passport->saveAs('/contractor/' . $this->photo_with_passport->baseName . '.' . $this->photo_with_passport->extension);
             return true;
         } else {
             return false;
@@ -121,7 +116,7 @@ class Contractors extends \yii\db\ActiveRecord
     public function uploadPhotos($photos){
         if ($this->validate()) {
             foreach ($photos as $photo) {
-                $photo->saveAs('contractor/' . $photo->baseName . '.' . $photo->extension);
+                $photo->saveAs('/contractor/' . $photo->baseName . '.' . $photo->extension);
             }
             return true;
         } else {

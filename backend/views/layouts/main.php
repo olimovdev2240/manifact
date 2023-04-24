@@ -101,7 +101,7 @@ AppAsset::register($this);
                                         <a href="/contractors"><?= Yii::t('app', 'Kontragentlar') ?></a>
                                     </li>
                                     <li>
-                                        <a href="/contractors-tupe"><?= Yii::t('app', 'Kontragentlar turi') ?></a>
+                                        <a href="/contractors-type"><?= Yii::t('app', 'Kontragentlar turi') ?></a>
                                     </li>
                                     <li>
                                         <a href="/contractors-group"><?= Yii::t('app', 'Kontragentlar-guruhi') ?></a>

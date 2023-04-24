@@ -49,13 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             ],
-            // 'section.name',
-            [
-                'attribute'=>'section.name',
-                'label'=>Yii::t('app', 'Bo`lim')
-            ],
-            // 'group_id',
-            // 'type.name',
+            
             [
                 'attribute'=>'type.name',
                 'label'=>Yii::t('app', 'Turi')
@@ -63,11 +57,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'group.name',
                 'label'=>Yii::t('app', 'Guruhi')
-            ],
-            // 'price_type.name',
-            [
-                'attribute'=>'price.name',
-                'label'=>Yii::t('app', 'Narx turi')
             ],
             // 'status',
             // 'special',
