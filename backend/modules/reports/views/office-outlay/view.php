@@ -107,7 +107,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             ],
-            'comment:ntext',
+            [
+                'attribute'=> 'comment',
+                'format' => 'raw'
+            ],
             // 'user_id',
             'current_rate',
             // 'date',
