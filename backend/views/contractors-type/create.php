@@ -9,10 +9,15 @@ $this->title = Yii::t('app', 'Create Contractors Type');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Contractors Types'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="contractors-type-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<!-- Page header start -->
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?= Yii::t('app', 'Kontragent') ?></li>
+        <li class="breadcrumb-item active"><?= Html::encode($this->title) ?></li>
+    </ol>
+</div>
+<!-- Page header end -->
+<div class="main-container">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

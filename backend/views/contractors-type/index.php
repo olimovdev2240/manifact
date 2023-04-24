@@ -13,9 +13,20 @@ use yii\widgets\Pjax;
 $this->title = Yii::t('app', 'Contractors Types');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="contractors-type-index">
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?= Yii::t('app', 'Kontragent') ?></li>
+        <li class="breadcrumb-item active"><?= Yii::t('app', 'Kontragent turlari') ?></li>
+    </ol>
 
-    <h1><?= Html::encode($this->title) ?><?= Html::a(Yii::t('app', 'Create Contractors Type'), ['create'], ['class' => 'btn btn-success float-end']) ?></h1>
+    <ul class="app-actions">
+        <li>
+            <?= Html::a(Yii::t('app', '<i class=\'icon-plus\'></i>'), ['create']) ?>
+        </li>
+    </ul>
+</div>
+<!-- Page header end -->
+<div class="main-container">
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 

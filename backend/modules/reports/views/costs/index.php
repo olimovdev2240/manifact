@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="page-header">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><?= Yii::t('app', 'Kassalarni boshqarish') ?></li>
-        <li class="breadcrumb-item active"><?= Yii::t('app', 'Kassa xarajatlari') ?></li>
+        <li class="breadcrumb-item active"><?= Yii::t('app', 'Kassa') ?></li>
     </ol>
 
     <ul class="app-actions">
