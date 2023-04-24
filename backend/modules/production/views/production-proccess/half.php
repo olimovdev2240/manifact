@@ -21,8 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <!-- Page header start -->
 <div class="page-header">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item">Sanovchi</li>
-        <li class="breadcrumb-item active">Maxsulotlarni tasdiqlash</li>
+        <li class="breadcrumb-item"><?= Yii::t('app', 'Sanovchi') ?></li>
+        <li class="breadcrumb-item active"><?= Yii::t('app', 'Maxsulotlarni tasdiqlash') ?></li>
     </ol>
 
     <ul class="app-actions">
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <form method="POST">
             <div class="input-group mb-3">
-                <input type="search" class="form-control" placeholder="ism yoki maxsulot kiriting" name="search">
+                <input type="search" class="form-control" placeholder="<?= Yii::t('app', 'ism yoki maxsulot kiriting') ?>" name="search">
                 <button class="btn btn-outline-info" type="submit" id="">
                     <i class="icon-search"></i>
                 </button>
