@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <ul class="app-actions">
         <li>
-            <a href="/base/product/create">
+            <a href="create">
                 <span class="range-text"></span>
                 <i class="icon-plus"></i>
             </a>
