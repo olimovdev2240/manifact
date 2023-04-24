@@ -15,9 +15,19 @@ use yii\widgets\Pjax;
 $this->title = Yii::t('app', 'Pay Offices');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="pay-offices-index">
-    <h1><?= Html::encode($this->title) ?>  <?= Html::a(Yii::t('app', 'Create Pay Offices'), ['create'], ['class' => 'btn btn-success float-end']) ?></h1>
-    <?php Pjax::begin(); ?>
+<<div class="page-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?= Yii::t('app', 'Kassalarni boshqarish') ?></li>
+        <li class="breadcrumb-item active"><?= Yii::t('app', 'Kassa') ?></li>
+    </ol>
+
+    <ul class="app-actions">
+        <li>
+            <?= Html::a(Yii::t('app', '<i class=\'icon-plus\'></i>'), ['create']) ?>
+        </li>
+    </ul>
+</div>
+<?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
