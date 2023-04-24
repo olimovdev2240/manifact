@@ -77,7 +77,7 @@ use yii\bootstrap5\Dropdown;
                                     echo Dropdown::widget([
                                         'items' => [
                                             ['label' => Yii::t('app', "Yakkalik hisobot"), 'url' => '/reportdoc/salary/single-report?id='.$m['id']],
-                                            ['label' => 'DropdownB', 'url' => '#'],
+                                            ['label' => Yii::t('app', "To`langan pullar"), 'url' => '/reportdoc/salary/single-money?id='.$m['id']],
                                         ],
                                     ]);
                                     ?>

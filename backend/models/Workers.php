@@ -86,4 +86,18 @@ class Workers extends \yii\db\ActiveRecord
             exit();
         }
     }
+    public static function removeSalary($earn, $worker){
+        $model = self::find()
+        ->where(['id'=>$worker])
+        ->one();
+        $model->earn -= $earn;
+        if($model->save()){
+            return true;
+        }else{
+            echo "<pre>";
+            print_r($model->getErrors());
+            echo "</pre>";
+            exit();
+        }
+    }
 }

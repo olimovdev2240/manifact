@@ -9,7 +9,7 @@ use kartik\daterange\DateRangePicker;
 <div class="page-header">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><?= Yii::t('app', 'Oylik hisoblash') ?></li>
-        <li class="breadcrumb-item active"><?= Yii::t('app', 'Yakkalik hisobotlar') ?></li>
+        <li class="breadcrumb-item active"><?= Yii::t('app', 'To`langan pullar') ?></li>
     </ol>
 
 </div>
@@ -56,30 +56,32 @@ use kartik\daterange\DateRangePicker;
             table-hover	
             align-middle">
                 <thead class="table-light">
-                    <caption><?= Yii::t('app', 'Ish haqlari hisoboti') ?></caption>
+                    <caption><?= Yii::t('app', 'To`langan summalar hisoboti') ?></caption>
                     <tr>
-                        <th><?= Yii::t('app', "Maxsulot") ?></th>
-                        <th><?= Yii::t('app', "Chiqarilgan sana") ?></th>
-                        <th><?= Yii::t('app', "Donasiga to`lanadigan summa") ?></th>
-                        <th><?= Yii::t('app', "Soni") ?></th>
-                        <th><?= Yii::t('app', "Brak") ?></th>
-                        <th><?= Yii::t('app', "To`lanadigan umumiy summa") ?></th>
+                        <th><?= Yii::t('app', "Ishchi") ?></th>
+                        <th><?= Yii::t('app', "Sana") ?></th>
+                        <th><?= Yii::t('app', "Summa") ?></th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
                     <? foreach ($model as $m) : ?>
                         <tr class="table-secondary" style="border: 1px solid black;">
-                            <td style="width: 25%;"><?= $m['product'] ?></td>
-                            <td style="width: 20%;"><?= date("d.m.Y", strtotime($m['counted_at'])) ?></td>
-                            <td style="text-align: right; width: 25%;"><?= number_format($m['salary'], 0, ",", ' ') ?> <?= Yii::t('app', 'so`m') ?></td>
-                            <td style="text-align: right; width: 5%;"><?= number_format($m['qty'], 0, ",", ' ') ?> <?= Yii::t('app', 'ta') ?></td>
-                            <td style="text-align: right; width: 5%;"><?= number_format($m['invalid'], 0, ",", ' ') ?> <?= Yii::t('app', 'ta') ?></td>
-                            <td style="text-align: right; width: 20%;"><?= number_format($m['qty'] * $m['salary'], 0, ",", ' ') ?> <?= Yii::t('app', 'so`m') ?></td>
+                            <td style="width: 25%;"><?= $m['full_name'] ?></td>
+                            <td style="width: 20%;"><?= date("d.m.Y H:i", strtotime($m['date'])) ?></td>
+                            <td style="text-align: right; width: 25%;"><?= number_format($m['cost_sum'], 0, ",", ' ') ?> <?= Yii::t('app', 'so`m') ?></td>
                         </tr>
                     <? endforeach ?>
+
                 </tbody>
                 <tfoot>
-
+                    <tr class="table-secondary" style="border: 1px solid black;">
+                        <td colspan="2">
+                            <h4><?= Yii::t('app', 'Qoldiq summa:') ?></h4>
+                        </td>
+                        <td style="text-align: right; width: 25%;">
+                            <h5><?= number_format($m['earn'], 0, ",", ' ') ?> <?= Yii::t('app', 'so`m') ?></h5>
+                        </td>
+                    </tr>
                 </tfoot>
             </table>
         </div>

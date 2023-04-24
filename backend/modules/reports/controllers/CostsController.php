@@ -100,7 +100,6 @@ class CostsController extends Controller
                 // echo "</pre>";
                 // exit();
                 $model->save();
-                PayOffices::removeRemains($model);
                 for ($i = 0; $i < count($salary); $i++) {
                     $mSalary = new ReportSalary();
                     $mSalary->cost_id = $model->id;
@@ -109,7 +108,9 @@ class CostsController extends Controller
                     $mSalary->cost_sum = $this->isNumberNull($salary[$i]['cost_sum']);
                     $mSalary->cost_usd = $this->isNumberNull($salary[$i]['cost_usd']);
                     $mSalary->save();
+                    Workers::removeSalary($mSalary->cost_sum, $mSalary->worker_id);
                 }
+                PayOffices::removeRemains($model);
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Muvaffaqiyatli saqlandi!'));
                 return $this->redirect(Yii::$app->request->referrer);
 

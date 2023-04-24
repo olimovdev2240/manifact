@@ -53,4 +53,34 @@ class SalaryController extends \yii\web\Controller
             ]
         );
     }
+    public function actionSingleMoney()
+    {
+        if (!empty($_GET['id'])) {
+            $id = $_GET['id'];
+        } else {
+            Yii::$app->session->setFlash('warning', Yii::t('app', 'id mavjud emas'));
+            $this->goBack();
+        }
+        $from = date("Y-m-1");
+        $to = date("Y-m-d");
+        if(!empty($_POST['date_range'])){
+            // echo "<pre>";
+            // print_r($_POST);
+            // echo "</pre>";
+            // exit();
+            $from = $_POST['from_date'];
+            $to = $_POST['to_date'];
+        }
+        $to = date("Y-m-d", strtotime($to . "+1day"));
+        $sql = "SELECT * FROM costs left join workers on workers.id = costs.user_id WHERE costs.user_id = {$id} AND date <'{$to}' AND date >='{$from}' Order by date desc";
+        $model = Yii::$app->db->createCommand($sql)->queryAll();
+        return $this->render(
+            'single-money',
+            [
+                'from' => $from,
+                'to' => $to,
+                'model' => $model,
+            ]
+        );
+    }
 }
