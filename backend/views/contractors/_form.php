@@ -20,10 +20,8 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
     <?
-    $section = ArrayHelper::map(Sections::find()->all(), 'id', 'name');
     $group = ArrayHelper::map(ContractorsGroup::find()->all(), 'id', 'name');
     $type = ArrayHelper::map(ContractorsType::find()->all(), 'id', 'name');
-    $price = ArrayHelper::map(PricesType::find()->all(), 'id', 'name');
         echo Tabs::widget([
             'items' => [
                 [
