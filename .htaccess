@@ -1,0 +1,29 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymlinks
+    RewriteEngine On
+</IfModule>
+
+
+<IfModule mod_rewrite.c>
+    RewriteRule ^api(.+)?$ api/web/$1 [L,PT]
+    RewriteRule ^api/(.+)?$ api/web/$1 [L,PT]
+    # если /front, то в backend
+    RewriteCond %{REQUEST_URI} ^/(front)
+    RewriteRule ^front/assets/(.*)$ frontend/web/assets/$1 [L]
+    RewriteRule ^front/css/(.*)$ frontend/web/css/$1 [L]
+    RewriteRule ^front/js/(.*)$ frontend/web/js/$1 [L]
+    RewriteCond %{REQUEST_URI} !^/frontend/web/(assets|js|css|js)/
+    RewriteCond %{REQUEST_URI} ^/(front)
+    RewriteRule ^.*$ frontend/web/index.php [L]
+    RewriteCond %{REQUEST_URI} ^/(assets|css|js|images)
+    RewriteRule ^assets/(.*)$ backend/web/assets/$1 [L]
+    RewriteRule ^css/(.*)$ backend/web/css/$1 [L]
+    RewriteRule ^js/(.*)$ backend/web/js/$1 [L]
+    RewriteRule ^images/(.*)$ backend/web/images/$1 [L]
+    RewriteRule ^(.*)$ backend/web/$1 [L]
+    RewriteCond %{REQUEST_URI} !^/(backend|frontend)/web/(assets|css|js)/
+    RewriteCond %{REQUEST_URI} !index.php
+    RewriteCond %{REQUEST_FILENAME} !-f [OR]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^.*$ backend/web/index.php
+</IfModule>
