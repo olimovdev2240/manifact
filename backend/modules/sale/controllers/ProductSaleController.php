@@ -159,7 +159,7 @@ class ProductSaleController extends Controller
     public function actionUpdateService($id){
         $model = PsServices::findOne($id);
         $services = ArrayHelper::map(Services::find()->all(), 'id', 'name');
-        $workers = ArrayHelper::map(Workers::find()->all(), 'id', 'name');
+        $workers = ArrayHelper::map(Workers::find()->all(), 'id', 'full_name');
         if($this->request->isPost) {
             $ps = ProductSale::findOne($model->ps_id);
             $oldAmount = $model->amount;
@@ -193,14 +193,14 @@ class ProductSaleController extends Controller
                 'cost_sum'=>$model->amount,
                 'cost_usd'=>0,
             ];
-            Workers::removeRemains($remains);
+            Workers::removeSalary($model->amount, $model->worker_id);
             //yangi ishchiga  haq
             $remains = [
                 'worker_id'=>$_POST['PsServices']['worker_id'],
                 'cost_sum'=>$_POST['PsServices']['amount'],
                 'cost_usd'=>0,
             ];
-            Workers::addRemains($remains);
+            Workers::addSalary($_POST['PsServices']['amount'], $_POST['PsServices']['worker_id'] );
             $model->worker_id = $_POST['PsServices']['worker_id'];
             $model->comment = $_POST['PsServices']['comment'];
             $model->amount = $_POST['PsServices']['amount'];
@@ -250,7 +250,7 @@ class ProductSaleController extends Controller
                 'cost_sum'=>$model->amount,
                 'cost_usd'=>0,
             ];
-            Workers::removeRemains($remains);
+            Workers::removeSalary($model->amount, $model->worker_id);
             $model->delete();
             $ps->save();
             Yii::$app->session->setFlash('warning', Yii::t('app', 'Element o`chirildi!'));
@@ -309,7 +309,7 @@ class ProductSaleController extends Controller
     {
         $model = new ProductSale();
         $products = ArrayHelper::map(Products::find()->all(), 'id', 'name_uz');
-        $workers = ArrayHelper::map(Workers::find()->all(), 'id', 'fio');
+        $workers = ArrayHelper::map(Workers::find()->all(), 'id', 'full_name');
         $services = ArrayHelper::map(Services::find()->all(), 'id', 'name');
         $office = ArrayHelper::map(PayOffices::find()->all(), 'id', 'name');
         $base = ArrayHelper::map(Bases::find()->all(), 'id', 'name_uz');
@@ -368,7 +368,7 @@ class ProductSaleController extends Controller
                             'cost_sum'=>$se->amount,
                             'cost_usd'=>0,
                         ];
-                        Workers::addRemains($remains);
+                        Workers::addSalary($se->amount, $se->worker_id);
                     }
                 endforeach;
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Muvaffaqiyatli saqlandi!'));
