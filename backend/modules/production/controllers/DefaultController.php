@@ -5,6 +5,7 @@ namespace backend\modules\production\controllers;
 use backend\models\ProductionProccess;
 use backend\models\Products;
 use backend\models\Stages;
+use backend\models\Workers;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -72,6 +73,51 @@ class DefaultController extends Controller
         return $this->renderAjax('new-production', [
             'stages' => $stages,
             'model' => $model,
+        ]);
+    }
+    public function actionProductionManager()
+    {
+        $products = Products::find()
+            ->orderBy('id asc')
+            // ->where(['type_id' => 1])
+            ->where(['type_id' => 1])
+            ->orWhere(['type_id' => 2])
+            ->all();
+        $stages = Stages::find()
+            ->orderBy('place')
+            ->all();
+        $stages = ArrayHelper::map($stages, 'id', 'name_uz');
+        $workers = ArrayHelper::map(Workers::find()->asArray()->all(), 'id', 'full_name');
+        $model = new ProductionProccess();
+        $products = ArrayHelper::map($products, 'id', 'name_uz');
+        if (Yii::$app->request->post()) {
+            $model->load(Yii::$app->request->post());
+            $model->qty = $_POST['qty'];
+            $model->photo = UploadedFile::getInstance($model, 'photo');
+            if ($model->saveProccessByManager()) {
+                if ($model->photo != "") {
+                    $model->upload();
+                }
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Amal muvaffaqiyatli bajarildi!'));
+                return $this->redirect(Yii::$app->request->referrer);
+            } else {
+                // echo "<pre>";
+                // print_r($model);
+                // echo "</pre>";
+                // exit();
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Qiymatlar kiritilishida xatolik bor!'));
+                return $this->redirect(Yii::$app->request->referrer);
+            }
+            // echo "<pre>";
+            // print_r($model);
+            // echo "</pre>";
+            // exit();
+        }
+        return $this->render('manager', [
+            'products' => $products,
+            'model' => $model,
+            'workers' => $workers,
+            'stages' => $stages,
         ]);
     }
     public function actionProductionHalf()

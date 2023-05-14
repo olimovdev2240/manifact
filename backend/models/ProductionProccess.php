@@ -115,12 +115,41 @@ class ProductionProccess extends \yii\db\ActiveRecord
             $this->worker_id = Yii::$app->user->id;
             $this->created_at = date("Y-m-d H:i");
             if ($this->save()) {
-                if (BaseRemains::addQty(2, $this->product_id, $this->qty)) {
-                    return true;
-                } else {
-                    Yii::$app->session->setFlash('warning', Yii::t('app', 'Ma\'lumotlarni kiritishning iloji yo`q!'));
-                    return false;
+                return true;
+            } else {
+
+                echo "<pre>";
+                print_r($this->getErrors());
+                echo "</pre>";
+                exit();
+            }
+        }
+    }
+    public function saveProccessByManager()
+    {
+        if ($this->validateStageQty()) {
+            BaseRemains::addQty($this->status, $this->product_id, $this->qty);
+            Workers::addSalary($this->qty * $this->salary, $this->worker_id);
+            $this->status = 0;
+            $attached = Attach::find()->where(['product_id' => $this->product_id])->all();
+            if (!empty($attached)) {
+                foreach ($attached as $a) {
+                    BaseRemains::removeQty(Bases::INVERTAR_BASE, $a->invertor_id, $a->qty * $this->qty);
                 }
+            }
+            // $pricing = Pricing::findOne(['product_id' => $this->product_id]);
+            // if (empty($pricing->stage_id)) {
+            //     Yii::$app->session->setFlash('warning', Yii::t('app', 'Etap narxlanmagan'));
+            //     return false;
+            // }
+            // $this->stage_id = $pricing->stage_id;
+            $this->packaging_type = 'turlanmagan';
+            // $this->salary = $pricing->amout;
+            $this->is_counted = 1;
+            $this->counted_at = date("Y-m-d H:i");
+            $this->created_at = date("Y-m-d H:i");
+            if ($this->save()) {
+                return true;
             } else {
 
                 echo "<pre>";
@@ -140,17 +169,17 @@ class ProductionProccess extends \yii\db\ActiveRecord
                     BaseRemains::removeQty(4, $a->invertor_id, $a->qty * $this->qty);
                 }
             }
-            $pricing = Pricing::findOne(['product_id' => $this->product_id]);
-            if (empty($pricing->stage_id)) {
-                Yii::$app->session->setFlash('warning', Yii::t('app', 'Etap narxlanmagan'));
-                return false;
-            }
-            $this->stage_id = $pricing->stage_id;
-            $this->packaging_type = 'turlanmagan';
-            $this->salary = $pricing->amout;
+            // $pricing = Pricing::findOne(['product_id' => $this->product_id]);
+            // if (empty($pricing->stage_id)) {
+            //     Yii::$app->session->setFlash('warning', Yii::t('app', 'Etap narxlanmagan'));
+            //     return false;
+            // }
+            // $this->stage_id = $pricing->stage_id;
+            // $this->packaging_type = 'turlanmagan';
+            // $this->salary = $pricing->amout;
             $this->worker_id = Yii::$app->user->id;
             $this->created_at = date("Y-m-d H:i");
-            if ($this->save() && BaseRemains::addQty(3, $this->product_id, $this->qty)) {
+            if ($this->save()) {
                 return true;
             } else {
 
@@ -169,6 +198,10 @@ class ProductionProccess extends \yii\db\ActiveRecord
         }
         //etaplash va narxlash
         $pricing = Pricing::find()->where(['product_id' => $this->product_id])->one();
+        if (empty($pricing->stage_id)) {
+            Yii::$app->session->setFlash('warning', Yii::t('app', 'Etap narxlanmagan'));
+            return false;
+        }
         $this->stage_id = $pricing->stage_id;
         $this->salary = $pricing->amout;
         $thisGoal = $pricing->goal;
@@ -190,8 +223,12 @@ class ProductionProccess extends \yii\db\ActiveRecord
                 }
             }
             //bitta avvalgi etapdagi product olinmoqda
-            $myproduct_id = $this->product_id - 1;
-            $this->product_id;
+            $myProduct = Products::find()->where(['id' => $this->product_id])->one();
+            // echo "<pre>";
+            // print_r($myProduct);
+            // echo "</pre>";
+            // exit();
+            $myproduct_id = $myProduct->convertme;
             $sql = "SELECT sum(`qty` - `status`) as miqdor, production_proccess.* from production_proccess where stage_id = '{$perviousStageId}' AND product_id = {$myproduct_id} AND is_counted = 1 AND `qty` <> `status` Group by product_id";
             $perviousProducts = Yii::$app->db->createCommand($sql)->queryOne();
             // echo "<pre>";
@@ -208,9 +245,9 @@ class ProductionProccess extends \yii\db\ActiveRecord
             // echo ceil($this->qty / $thisGoal);
             // exit;   
             if ($myGoal >= $this->qty) {
-                BaseRemains::removeQty(Bases::MATERIAL_BASE, $this->product_id - 1, ceil($this->qty / $thisGoal));
+                BaseRemains::removeQty(Bases::MATERIAL_BASE, $myproduct_id, ceil($this->qty / $thisGoal));
                 $qty = ceil($this->qty / $thisGoal);
-                self::producting($perviousStageId, $this->product_id - 1, $qty);
+                self::producting($perviousStageId, $myproduct_id, $qty);
                 return true;
             }
             return false;

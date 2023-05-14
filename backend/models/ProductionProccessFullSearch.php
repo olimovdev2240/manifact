@@ -43,7 +43,7 @@ class ProductionProccessFullSearch extends ProductionProccess
     {
         $query = ProductionProccess::find()
         ->leftJoin('products', 'products.id=production_proccess.product_id')
-        ->where(['products.type_id' => 2, 'is_counted' => 0]);
+        ->where('products.type_id = 2');
 
         // add conditions that should always apply here
 

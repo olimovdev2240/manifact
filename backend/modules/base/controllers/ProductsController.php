@@ -8,6 +8,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * ProductsController implements the CRUD actions for Products model.
@@ -69,9 +70,15 @@ class ProductsController extends Controller
     public function actionCreate()
     {
         $model = new Products();
-
+        $products = ArrayHelper::map(Products::find()->all(), 'id', 'name_uz');
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post())) {
+                $model->convertme = json_encode($_POST['Products']['convertme']);
+                // echo "<pre>";
+                // print_r($model);
+                // echo "</pre>";
+                // exit();
+                $model->save();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -80,6 +87,7 @@ class ProductsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'products' => $products,
         ]);
     }
 
@@ -93,13 +101,18 @@ class ProductsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->convertme = json_decode($model->convertme);
+        $products = ArrayHelper::map(Products::find()->all(), 'id', 'name_uz');
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->convertme = json_encode($model->convertme);
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'products' => $products,
         ]);
     }
 

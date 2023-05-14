@@ -1,5 +1,6 @@
 <?php
 
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -19,6 +20,15 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'type_id')->textInput() ?>
 
     <?= $form->field($model, 'volume_id')->textInput() ?>
+    <?= $form->field($model, 'convertme')->widget(Select2::classname(), [
+                    'data' => $products,
+                    'language' => 'ru',
+                    'options' => ['placeholder' => Yii::t('app', 'Maxsulot')],
+                    'pluginOptions' => [
+                        'multiple' => true,
+                        'allowClear' => true
+                    ],
+                ]) ?>
 
     <?= $form->field($model, 'notif')->textInput() ?>
 

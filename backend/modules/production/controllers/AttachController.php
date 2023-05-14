@@ -104,13 +104,22 @@ class AttachController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $half = Products::find()
+        ->where(['type_id'=> 1])
+        ->all();
+        $half = ArrayHelper::map($half, 'id', 'name_uz');
+        $material = Products::find()
+        ->where(['type_id' => 3])
+        ->all();
+        $material = ArrayHelper::map($material, 'id', 'name_uz');
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'half' => $half,
+            'material' => $material,
         ]);
     }
 

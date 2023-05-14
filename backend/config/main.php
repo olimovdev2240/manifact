@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'language' => 'uz',
+    'language' => 'ru',
     'modules' => [
         'admin' => [
             'class' => 'mdm\admin\Module',

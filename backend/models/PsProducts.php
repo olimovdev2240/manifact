@@ -16,7 +16,6 @@ use Yii;
  * @property float|null $price Narx
  * @property float|null $amount Summa
  * @property float|null $fee Tannarx
- * @property string|null $special
  *
  * @property ProductSale $ps
  */

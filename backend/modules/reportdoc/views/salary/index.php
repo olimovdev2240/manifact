@@ -67,7 +67,7 @@ use yii\bootstrap5\Dropdown;
                 </thead>
                 <tbody class="table-group-divider">
                     <? foreach ($model as $m) : ?>
-                        <tr class="table-secondary">
+                        <tr class="">
                             <td><?= $m['full_name'] ?></td>
                             <td><?= number_format($m['earn'], 0, ",", ' ') ?> <?= Yii::t('app', 'so`m') ?></td>
                             <td>

@@ -85,16 +85,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             // 'photo',
-            //'created_at',
-            // 'counted_at',
+            'created_at',
+            'counted_at',
             //'is_defective',
             //'status',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, ProductionProccess $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                }
-            ],
         ],
     ]); ?>
 

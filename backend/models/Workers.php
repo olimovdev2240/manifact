@@ -48,7 +48,9 @@ class Workers extends \yii\db\ActiveRecord
     public function upload()
     {
         if ($this->validate()) {
-            $this->photo->saveAs('workers/' . $this->photo->baseName . '.' . $this->photo->extension);
+            if($this->photo != ""){
+                $this->photo->saveAs('workers/' . $this->photo->baseName . '.' . $this->photo->extension);
+            }
             return true;
         } else {
             return false;

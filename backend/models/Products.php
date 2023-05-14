@@ -12,6 +12,7 @@ use Yii;
  * @property string $name_ru Nomi (Krillcha)
  * @property int $type_id Turi
  * @property int $volume_id Birligi
+ * @property int $convertme Avvalgi maxsulot
  * @property int $notif Xabarnoma
  */
 class Products extends \yii\db\ActiveRecord
@@ -32,6 +33,7 @@ class Products extends \yii\db\ActiveRecord
         return [
             [['name_uz', 'name_ru', 'type_id', 'volume_id'], 'required'],
             [['type_id', 'volume_id', 'notif'], 'integer'],
+            [['convertme'], 'safe'],
             [['name_uz', 'name_ru'], 'string', 'max' => 255],
             [['volume_id'], 'exist', 'skipOnError' => true, 'targetClass' => Volumes::className(), 'targetAttribute' => ['volume_id' => 'id']],
         ];
@@ -49,6 +51,7 @@ class Products extends \yii\db\ActiveRecord
             'type_id' => Yii::t('app', 'Turi'),
             'volume_id' => Yii::t('app', 'Birligi'),
             'notif' => Yii::t('app', 'Xabarnoma'),
+            'convertme' => Yii::t('app', 'Oldingi etapdagi maxsulot'),
         ];
     }
     public function getVolume()

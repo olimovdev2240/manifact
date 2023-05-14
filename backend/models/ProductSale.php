@@ -18,8 +18,6 @@ use Yii;
  * @property float|null $amount_convert Konv. summasi
  * @property float $current_rate Kurs
  * @property string|null $date Sana
- * @property string|null $products
- * @property string|null $services
  *
  * @property PsProducts[] $psProducts
  * @property PsServices[] $psServices
@@ -55,7 +53,7 @@ class ProductSale extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'user_id' => Yii::t('app', 'Foydalanuvchi'),
+            'user_id' => Yii::t('app', 'Jo`natuvchi'),
             'base_id' => Yii::t('app', 'Ombor'),
             'contractor_id' => Yii::t('app', 'Xaridor'),
             'office_id' => Yii::t('app', 'Kassa'),

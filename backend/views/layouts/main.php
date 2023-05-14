@@ -7,6 +7,7 @@ use backend\assets\AppAsset;
 use yii\bootstrap5\Html;;
 $worker  = Yii::$app->db->createCommand("SELECT * from workers WHERE user_id = " . Yii::$app->user->id)->queryOne();
 AppAsset::register($this);
+$product_remains = Yii::$app->db->createCommand("SELECT br.*, p.name_uz, SUM(br.qty) remains, p.notif notif FROM base_remains br LEFT JOIN products p ON p.id = br.product_id  GROUP BY br.product_id")->queryAll();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -63,85 +64,97 @@ AppAsset::register($this);
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="/">Admin</a>
+                                        <a href="/"><?= Yii::t('app', 'Oferta') ?></a>
                                     </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="icon-domain"></i>
-                                <span class="menu-text"><?= Yii::t('app', 'Ombor') ?></span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/base"><?= Yii::t('app', 'Omborlarni boshqarish') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/base/base/incomes"><?= Yii::t('app', 'Maxsulot kirimlari') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/base/base/income"><?= Yii::t('app', 'Kirim qilish') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/base/products"><?= Yii::t('app', 'Maxsulotlar') ?></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="icon-user1"></i>
-                                <span class="menu-text"><?= Yii::t('app', 'Kontragent') ?></span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/contractors"><?= Yii::t('app', 'Kontragentlar') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/contractors-type"><?= Yii::t('app', 'Kontragentlar turi') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/contractors-group"><?= Yii::t('app', 'Kontragentlar-guruhi') ?></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="icon-domain"></i>
-                                <span class="menu-text"><?= Yii::t('app', 'Ishlab chiqarish') ?></span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <? if (Yii::$app->user->can('Upakovshik')) : ?>
+                                    <? if (Yii::$app->user->can('super admin')) : ?>
                                         <li>
-                                            <a href="/production/default/packaging"><?= Yii::t('app', 'Qadoqlash') ?></a>
+                                            <a href="/reportdoc"><?= Yii::t('app', 'Hisobotlar') ?></a>
                                         </li>
-                                    <? endif ?>
-                                    <? if (Yii::$app->user->can('Rulonchi') || Yii::$app->user->can('Palkachi')) : ?>
                                         <li>
-                                            <a href="/production/default/production-half"><?= Yii::t('app', 'Yarimtayyor maxsulot') ?></a>
-                                        </li>
-                                    <? endif ?>
-                                    <? if (!Yii::$app->user->can('Rulonchi') && !Yii::$app->user->can('Palkachi') && !Yii::$app->user->can('Upakovshik')) : ?>
-                                        <li>
-                                            <a href="/production"><?= Yii::t('app', 'Yarimtayyor maxsulot qo`shish') ?></a>
+                                            <a href="/reportdoc/default/fee"><?= Yii::t('app', 'Narxlar hisoboti') ?></a>
                                         </li>
                                     <? endif ?>
                                 </ul>
                             </div>
                         </li>
+                        <? if (Yii::$app->user->can('omborchi')) : ?>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="icon-domain"></i>
+                                    <span class="menu-text"><?= Yii::t('app', 'Ombor') ?></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/base"><?= Yii::t('app', 'Omborlarni boshqarish') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/base/base/incomes"><?= Yii::t('app', 'Maxsulot kirimlari') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/base/base/income"><?= Yii::t('app', 'Kirim qilish') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/base/products"><?= Yii::t('app', 'Maxsulotlar') ?></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <? endif ?>
+                        <? if (Yii::$app->user->can('Menejer')) : ?>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="icon-user1"></i>
+                                    <span class="menu-text"><?= Yii::t('app', 'Kontragent') ?></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/contractors"><?= Yii::t('app', 'Kontragentlar') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/contractors-type"><?= Yii::t('app', 'Kontragentlar turi') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/contractors-group"><?= Yii::t('app', 'Kontragentlar-guruhi') ?></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <? endif ?>
+                        <? if (Yii::$app->user->can('Ishchi')) : ?>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="icon-domain"></i>
+                                    <span class="menu-text"><?= Yii::t('app', 'Ishlab chiqarish') ?></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <? if (Yii::$app->user->can('Dazmolchi')) : ?>
+                                            <li>
+                                                <a href="/production/default/packaging"><?= Yii::t('app', 'Qadoqlash') ?></a>
+                                            </li>
+                                        <? endif ?>
+                                        <? if (Yii::$app->user->can('Ishchi')) : ?>
+                                            <li>
+                                                <a href="/production/default/production-half"><?= Yii::t('app', 'Yarimtayyor maxsulot') ?></a>
+                                            </li>
+                                        <? endif ?>
+                                    </ul>
+                                </div>
+                            </li>
+                        <? endif ?>
                         <? if (Yii::$app->user->can('Sanovchi')) : ?>
                             <li class="sidebar-dropdown">
                                 <a href="#">
                                     <i class="icon-eye1"></i>
-                                    <span class="menu-text"><?= Yii::t('app', 'Ishlab chiqarish boshqaruvi') ?></span>
+                                    <span class="menu-text"><?= Yii::t('app', 'Sifat nazorati') ?></span>
                                 </a>
                                 <div class="sidebar-submenu">
                                     <ul>
+                                        <li>
+                                            <a href="/production/default/production-manager"><?= Yii::t('app', 'Kiritish') ?></a>
+                                        </li>
                                         <li>
                                             <a href="/production/production-proccess/half"><?= Yii::t('app', 'Yarimtayyor') ?></a>
                                         </li>
@@ -152,69 +165,91 @@ AppAsset::register($this);
                                 </div>
                             </li>
                         <? endif ?>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="icon-assignment_turned_in"></i>
-                                <span class="menu-text"><?= Yii::t('app', 'Ishlab chiqarish boshqaruvi') ?></span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/production/stages/list"><?= Yii::t('app', 'Etaplar') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/production/stages"><?= Yii::t('app', 'Etaplarni belgilash') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/production/pricing"><?= Yii::t('app', 'Narxlash') ?></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="icon-account_box"></i>
-                                <span class="menu-text"><?= Yii::t('app', 'Ishchilar boshqaruvi') ?></span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/hr/workers"><?= Yii::t('app', 'Barcha ishchilar') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/hr/workers/add"><?= Yii::t('app', 'Ishchi qo`shish') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="icon-attach_money"></i>
-                                <span class="menu-text"><?= Yii::t('app', 'Kassalar boshqaruvi') ?></span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/cost-types"><?= Yii::t('app', 'Xarajat turlari') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/reports/costs"><?= Yii::t('app', 'Oylik berish') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/reports/office-outlay"><?= Yii::t('app', 'Chiqim qilish') ?></a>
-                                    </li>
-                                    <li>
-                                        <a href="/reports/office-debit"><?= Yii::t('app', 'Kirim qilish') ?></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+                        <? if (Yii::$app->user->can('Menejer')) : ?>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="icon-assignment_turned_in"></i>
+                                    <span class="menu-text"><?= Yii::t('app', 'Ishlab chiqarish boshqaruvi') ?></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/production/stages/list"><?= Yii::t('app', 'Etaplar') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/production/stages"><?= Yii::t('app', 'Etaplarni belgilash') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/production/pricing"><?= Yii::t('app', 'Narxlash') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/production/attach"><?= Yii::t('app', 'Homashyo biriktirish') ?></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="icon-account_box"></i>
+                                    <span class="menu-text"><?= Yii::t('app', 'Ishchilar boshqaruvi') ?></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/hr/workers"><?= Yii::t('app', 'Barcha ishchilar') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/hr/workers/add"><?= Yii::t('app', 'Ishchi qo`shish') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <? endif ?>
+                        <? if (Yii::$app->user->can('kassir')) : ?>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="icon-attach_money"></i>
+                                    <span class="menu-text"><?= Yii::t('app', 'Kassalar boshqaruvi') ?></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/cost-types"><?= Yii::t('app', 'Xarajat turlari') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/reports/costs"><?= Yii::t('app', 'Oylik berish') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/reports/office-outlay"><?= Yii::t('app', 'Chiqim qilish') ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="/reports/office-debit"><?= Yii::t('app', 'Kirim qilish') ?></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <? endif ?>
+                        <? if (Yii::$app->user->can('Tashuvchi')) : ?>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="icon-backspace"></i>
+                                    <span class="menu-text"><?= Yii::t('app', 'Sotuv bo`limi') ?></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/sale/product-sale"><?= Yii::t('app', 'Maxsulot sotish') ?></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <? endif ?>
                         <!-- <li>
                             <a href="chat.html">
                                 <i class="icon-message-circle"></i>
@@ -803,12 +838,6 @@ AppAsset::register($this);
                     </a>
                 </div>
                 <div class="header-items">
-                    <!-- Custom search start -->
-                    <div class="custom-search">
-                        <input type="text" class="search-query" placeholder="Search here ...">
-                        <i class="icon-search1"></i>
-                    </div>
-                    <!-- Custom search end -->
 
                     <!-- Header actions start -->
                     <ul class="header-actions">
@@ -818,33 +847,21 @@ AppAsset::register($this);
                             </a>
                             <div class="dropdown-menu dropdown-menu-right lrg" aria-labelledby="notifications">
                                 <div class="dropdown-menu-header">
-                                    Tasks (05)
+                                    <?= Yii::t('app', "Kam qolgan maxsulotlar") ?>
                                 </div>
                                 <ul class="header-tasks">
-                                    <li>
-                                        <p>#48 - Dashboard UI<span>90%</span></p>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">
-                                                <span class="sr-only">90% Complete (success)</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <p>#95 - Alignment Fix<span>60%</span></p>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                                <span class="sr-only">60% Complete (success)</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <p>#7 - Broken Button<span>40%</span></p>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                <span class="sr-only">40% Complete (success)</span>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    <? foreach ($product_remains as $pr) : ?>
+                                        <? if ($pr['remains'] <= $pr['notif'] && $pr['notif'] != 0) : ?>
+                                            <li>
+                                                <p><?= $pr['name_uz'] ?></p>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="<?= round($pr['remains'] / $pr['notif']) ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?= round($pr['remains'] / $pr['notif']) ?>%">
+                                                        <span class="sr-only">90% Complete (success)</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <? endif ?>
+                                    <? endforeach ?>
                                 </ul>
                             </div>
                         </li>
@@ -855,7 +872,7 @@ AppAsset::register($this);
                             </a>
                             <div class="dropdown-menu dropdown-menu-right lrg" aria-labelledby="notifications">
                                 <div class="dropdown-menu-header">
-                                    Notifications (40)
+                                    <?= Yii::t('app', 'So`nggi o`zgarishlar') ?>
                                 </div>
                                 <ul class="header-notifications">
                                     <li>
@@ -867,30 +884,6 @@ AppAsset::register($this);
                                                 <div class="user-title">Abbott</div>
                                                 <div class="noti-details">Membership has been ended.</div>
                                                 <div class="noti-date">Oct 20, 07:30 pm</div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="user-img busy">
-                                                <img src="img/user10.png" alt="User">
-                                            </div>
-                                            <div class="details">
-                                                <div class="user-title">Braxten</div>
-                                                <div class="noti-details">Approved new design.</div>
-                                                <div class="noti-date">Oct 10, 12:00 am</div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="user-img online">
-                                                <img src="img/user6.png" alt="User">
-                                            </div>
-                                            <div class="details">
-                                                <div class="user-title">Larkyn</div>
-                                                <div class="noti-details">Check out every table in detail.</div>
-                                                <div class="noti-date">Oct 15, 04:00 pm</div>
                                             </div>
                                         </a>
                                     </li>

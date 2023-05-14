@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\ContractorsGroup;
 use backend\models\ContractorsGroupSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

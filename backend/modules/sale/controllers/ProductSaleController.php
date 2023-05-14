@@ -89,13 +89,6 @@ class ProductSaleController extends Controller
         $model = PsProducts::findOne($id);
         $products = ArrayHelper::map(Products::find()->all(), 'id', 'name');
         if($this->request->isPost) {
-            BaseIncome::addQtyByFIFO($base, $model->product_id, $model->qty);
-            BaseIncome::removeQtyByFIFO($base, $_POST['PsProducts']['product_id'], $_POST['PsProducts']['qty']);
-            // echo "<pre>";
-            // print_r($_POST);
-            // print_r($model);
-            // echo "</pre>";
-            // exit();
             $ps = ProductSale::findOne($model->ps_id);
             //eskilarni togirlash
             BaseRemains::addQty($base, $model->product_id, $model->qty);
@@ -336,10 +329,6 @@ class ProductSaleController extends Controller
                 $model->save();
                 foreach($products as $p):
                     if($p['product_id']!=""){
-                        $fifo = BaseIncome::removeQtyByFIFO($model->base_id, $p['product_id'], $p['qty']);
-                        if(!$fifo){
-                            break;
-                        }
                         $pr = new PsProducts();
                         $pr->ps_id = $model->id;
                         $pr->product_id = $p['product_id'];
@@ -372,41 +361,6 @@ class ProductSaleController extends Controller
                     }
                 endforeach;
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Muvaffaqiyatli saqlandi!'));
-                if($model->convertme&&$model->exchange_amount==1){
-                    $cost_usd_kassa = $model->amount_convert;
-                    $cost_sum_contr = $model->amount-$model->amount_convert*$model->current_rate;
-                    $contr = [
-                        'contractor_id'=>$model->contractor_id,
-                        'cost_sum'=>$cost_sum_contr,
-                        'cost_usd'=>0
-                    ];
-                    Contractors::addRemains($contr);
-                    $office = [
-                        'office_id'=>$model->office_id,
-                        'cost_sum'=> 0,
-                        'cost_usd'=>$cost_usd_kassa
-                    ];
-                    PayOffices::addRemains($office);
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-                if($model->convertme&&$model->exchange_amount==2){
-                    $cost_sum_kassa = $model->amount_convert;
-                    $cost_usd_contr = $model->amount-$model->amount_convert/$model->current_rate;
-                    $contr = [
-                        'contractor_id'=>$model->contractor_id,
-                        'cost_usd'=>$cost_usd_contr,
-                        'cost_sum'=>0
-                    ];
-                    Contractors::addRemains($contr);
-                    $office = [
-                        'office_id'=>$model->office_id,
-                        'cost_usd'=> 0,
-                        'cost_sum'=>$cost_sum_kassa
-                    ];
-                    PayOffices::addRemains($office);
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-                if(!$model->convertme&&$model->exchange_amount==1){
                     $cost_sum_kassa = $model->amount_convert;
                     $cost_sum_contr = $model->amount-$model->amount_convert;
                     $contr = [
@@ -414,7 +368,12 @@ class ProductSaleController extends Controller
                         'cost_sum'=>$cost_sum_contr,
                         'cost_usd'=>0
                     ];
-                    Contractors::addRemains($contr);
+                    if(!Contractors::addRemains($contr)){
+                        echo "<pre>";
+                        print_r($contr);
+                        echo "</pre>";
+                        exit();
+                    }
                     $office = [
                         'office_id'=>$model->office_id,
                         'cost_usd'=> 0,
@@ -422,24 +381,6 @@ class ProductSaleController extends Controller
                     ];
                     PayOffices::addRemains($office);
                     return $this->redirect(['view', 'id' => $model->id]);
-                }
-                if(!$model->convertme&&$model->exchange_amount==2){
-                    $cost_usd_kassa = $model->amount_convert;
-                    $cost_usd_contr = $model->amount-$model->amount_convert;
-                    $contr = [
-                        'contractor_id'=>$model->contractor_id,
-                        'cost_usd'=>$cost_usd_contr,
-                        'cost_sum'=>0
-                    ];
-                    Contractors::addRemains($contr);
-                    $office = [
-                        'office_id'=>$model->office_id,
-                        'cost_sum'=> 0,
-                        'cost_usd'=>$cost_usd_kassa
-                    ];
-                    PayOffices::addRemains($office);
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
                 // echo "<pre>";
                 // print_r($model);
                 // print_r($model->services);

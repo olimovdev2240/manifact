@@ -79,7 +79,7 @@ use kartik\daterange\DateRangePicker;
                             <h4><?= Yii::t('app', 'Qoldiq summa:') ?></h4>
                         </td>
                         <td style="text-align: right; width: 25%;">
-                            <h5><?= number_format($m['earn'], 0, ",", ' ') ?> <?= Yii::t('app', 'so`m') ?></h5>
+                            <h5><? if(!empty($m['earn'])) echo number_format($m['earn'], 0, ",", ' '); else echo 0; ?> <?= Yii::t('app', 'so`m') ?></h5>
                         </td>
                     </tr>
                 </tfoot>

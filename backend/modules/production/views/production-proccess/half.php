@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
                     <div class="card-footer d-flex flex-row justify-content-center">
-                        <a class="btn btn-sm btn-success ml-1" href="count?id=<?= $m->id ?>">
+                        <a class="btn btn-sm btn-success ml-1" href="half-count?id=<?= $m->id ?>">
                             <i class="icon-check"></i>
                         </a>
                     </div>

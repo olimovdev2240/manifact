@@ -19,9 +19,6 @@ use yii\filters\VerbFilter;
  */
 class ProductionProccessController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -44,7 +41,6 @@ class ProductionProccessController extends Controller
         //return true;
         return parent::beforeAction($action);
     }
-
     /**
      * Lists all ProductionProccess models.
      *
@@ -110,7 +106,7 @@ class ProductionProccessController extends Controller
             'pagination' => $pagination
         ]);
     }
-    public function actionCount()
+    public function actionHalfCount()
     {
         if (!empty($_GET['id'])) {
             $id = $_GET['id'];
@@ -128,6 +124,33 @@ class ProductionProccessController extends Controller
         $model->counted_at = date("Y-m-d H:i");
         if ($model->save()) {
             Workers::addSalary($model->qty * $model->salary, $model->worker_id);
+            BaseRemains::addQty(Bases::MATERIAL_BASE,$model->product_id, $model->qty);
+            Yii::$app->session->setFlash('info', Yii::t('app', 'Status o`zgartirildi'));
+            return $this->redirect(Yii::$app->request->referrer);
+        } else {
+            Yii::$app->session->setFlash('danger', Yii::t('app', 'Status o`zgartirishda xatolik bor'));
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+    }
+    public function actionFullCount()
+    {
+        if (!empty($_GET['id'])) {
+            $id = $_GET['id'];
+        } else {
+            Yii::$app->session->setFlash('warning', Yii::t('app', 'id mavjud emas'));
+            $this->goBack();
+        }
+        $model = $this->findModel($id);
+        if ($model->is_counted) {
+            Yii::$app->session->setFlash('info', Yii::t('app', 'status allaqachon o`zgartirilgan'));
+            $this->goBack();
+        }
+        $model->is_counted = 1;
+        $model->qty -= $model->invalid;
+        $model->counted_at = date("Y-m-d H:i");
+        if ($model->save()) {
+            Workers::addSalary($model->qty * $model->salary, $model->worker_id);
+            BaseRemains::addQty(Bases::PRODUCT_BASE,$model->product_id, $model->qty);
             Yii::$app->session->setFlash('info', Yii::t('app', 'Status o`zgartirildi'));
             return $this->redirect(Yii::$app->request->referrer);
         } else {
@@ -145,6 +168,7 @@ class ProductionProccessController extends Controller
         }
         $model = $this->findModel($id);
         $model->invalid = $_GET['val'];
+        $model->qty -= $model->invalid;
         if ($model->save()) {
             Yii::$app->session->setFlash('info', Yii::t('app', 'Status o`zgartirildi'));
             return $this->redirect(Yii::$app->request->referrer);
@@ -153,7 +177,6 @@ class ProductionProccessController extends Controller
             return $this->redirect(Yii::$app->request->referrer);
         }
     }
-
     /**
      * Displays a single ProductionProccess model.
      * @param int $id ID

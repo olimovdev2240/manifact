@@ -40,6 +40,8 @@ class PayOffices extends \yii\db\ActiveRecord
             [['remains_sum', 'remains_usd'], 'number'],
             [['bank', 'section_id', 'exchange', 'status', 'user_id'], 'integer'],
             [['code', 'name'], 'string', 'max' => 255],
+            [['exchange'], 'exist', 'skipOnError' => true, 'targetClass' => Exchanges::className(), 'targetAttribute' => ['exchange' => 'id']],
+            [['section_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sections::className(), 'targetAttribute' => ['section_id' => 'id']],
         ];
     }
 
@@ -62,6 +64,25 @@ class PayOffices extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Gets query for [[Exchange0]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExchange0()
+    {
+        return $this->hasOne(Exchanges::className(), ['id' => 'exchange']);
+    }
+
+    /**
+     * Gets query for [[Section]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSection()
+    {
+        return $this->hasOne(Sections::className(), ['id' => 'section_id']);
+    }
     //Qoldiqlar qoshib ketiladi
     public static function addRemains($o){
         $office = self::findOne($o['office_id']);

@@ -17,6 +17,7 @@ use Yii;
  * @property int|null $current_rate Kurs
  * @property int $exchange Valyuta
  * @property string|null $date Sana
+ * @property string|null $special Maxsus
  * @property int|null $remains_id qoldiq orqalimi?
  * @property int|null $income_id Tovar kirimidanmi?
  * 
@@ -86,22 +87,6 @@ class BaseIncome extends \yii\db\ActiveRecord
         if ($income->save()) return true;
         return false;
     }
-    public static function addRemainsFromProduction($base_id, $product_id, $qty, $price)
-    {
-        $income = new BaseIncome();
-        $income->base_id = $base_id;
-        $income->product_id = $product_id;
-        $income->qty = $qty;
-        $income->remains_qty = $qty;
-        $income->price = $price;
-        $income->amount = $price * $qty;
-        // echo "<pre>";
-        // print_r($p);
-        // echo "</pre>";
-        // exit();
-        if ($income->save()) return true;
-        return false;
-    }
     //update va delete uchun olib tashlash !remainsda
     public static function deleteRemains($id, $p)
     {
@@ -144,7 +129,7 @@ class BaseIncome extends \yii\db\ActiveRecord
     }
     public static function addQtyByFIFO($base, $product, $qty)
     {
-        $model = self::find()->andWhere(['<>', 'remains_qty', 'qty'])->andWhere(['base_id' => $base, 'product_id' => $product])->orderBy(['date' => SORT_DESC])->all();
+        $model = self::find()->andWhere(['=', 'remains_qty', 'qty'])->andWhere(['base_id' => $base, 'product_id' => $product])->orderBy(['date' => SORT_DESC])->all();
         // echo "<pre>";
         // print_r($model);
         // echo "</pre>";
@@ -171,16 +156,12 @@ class BaseIncome extends \yii\db\ActiveRecord
         $income->qty = $qty;
         $income->remains_qty = $qty;
         $income->price = $price;
-        $income->exchange = 1;
         $income->amount = $amount;
         $income->current_rate = $current_rate;
         $income->date = $date;
         $income->income_id = $id;
         if ($income->save()) return true;
-        echo "<pre>";
-        print_r($income->getErrors());
-        echo "</pre>";
-        exit();
+        return false;
     }
     public static function updateIncome($id, $qty, $price, $amount, $exchange)
     {
