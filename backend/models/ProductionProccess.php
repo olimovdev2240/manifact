@@ -101,6 +101,7 @@ class ProductionProccess extends \yii\db\ActiveRecord
             $attached = Attach::find()->where(['product_id' => $this->product_id])->all();
             if (!empty($attached)) {
                 foreach ($attached as $a) {
+                    self::productionAttached($this, $a);
                     BaseRemains::removeQty(4, $a->invertor_id, $a->qty * $this->qty);
                 }
             }
@@ -134,6 +135,7 @@ class ProductionProccess extends \yii\db\ActiveRecord
             $attached = Attach::find()->where(['product_id' => $this->product_id])->all();
             if (!empty($attached)) {
                 foreach ($attached as $a) {
+                    self::productionAttached($this, $a);
                     BaseRemains::removeQty(Bases::INVERTAR_BASE, $a->invertor_id, $a->qty * $this->qty);
                 }
             }
@@ -166,6 +168,7 @@ class ProductionProccess extends \yii\db\ActiveRecord
             $attached = Attach::find()->where(['product_id' => $this->product_id])->all();
             if (!empty($attached)) {
                 foreach ($attached as $a) {
+                    self::productionAttached($this, $a);
                     BaseRemains::removeQty(4, $a->invertor_id, $a->qty * $this->qty);
                 }
             }
@@ -269,5 +272,17 @@ class ProductionProccess extends \yii\db\ActiveRecord
             $update = "UPDATE production_proccess set `status` = `qty` where id = {$id}";
             Yii::$app->db->createCommand($update)->execute();
         endforeach;
+    }
+    public static function productionAttached($model, $a){
+        $invertor = Products::find()->where(['id'=>$a->invertor_id])->one();
+        $total = $model->qty * $a->qty;
+        $attached = new Attached();
+        $attached->product = $model->product_id;
+        $attached->material = $a->invertor_id;
+        $attached->qty = $total;
+        $attached->price = $invertor->sale_price;
+        $attached->date = date("Y-m-d H:i");
+        return $attached->save();
+
     }
 }

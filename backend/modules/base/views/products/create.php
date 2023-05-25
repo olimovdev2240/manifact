@@ -28,7 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <!-- Page header end -->
 <div class="main-container">
     <?= $this->render('_form', [
-        'model' => $model,
+        'model' => $model,     
+        'types' => $types,
         'products' => $products,
     ]) ?>
 

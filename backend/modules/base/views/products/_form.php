@@ -17,18 +17,28 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name_ru')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'type_id')->textInput() ?>
+    <?= $form->field($model, 'sale_price')->input('number')->label('Tannarx') ?>
 
-    <?= $form->field($model, 'volume_id')->textInput() ?>
+    <?= $form->field($model, 'type_id')->widget(Select2::classname(), [
+        'data' => $types,
+        'language' => 'ru',
+        'options' => ['placeholder' => Yii::t('app', 'Tur')],
+        'pluginOptions' => [
+            // 'multiple' => true,
+            'allowClear' => true
+        ],
+    ]) ?>
+
+    <?= $form->field($model, 'volume_id')->input('hidden', ['value' => 1])->label(false) ?>
     <?= $form->field($model, 'convertme')->widget(Select2::classname(), [
-                    'data' => $products,
-                    'language' => 'ru',
-                    'options' => ['placeholder' => Yii::t('app', 'Maxsulot')],
-                    'pluginOptions' => [
-                        'multiple' => true,
-                        'allowClear' => true
-                    ],
-                ]) ?>
+        'data' => $products,
+        'language' => 'ru',
+        'options' => ['placeholder' => Yii::t('app', 'Maxsulot')],
+        'pluginOptions' => [
+            // 'multiple' => true,
+            'allowClear' => true
+        ],
+    ]) ?>
 
     <?= $form->field($model, 'notif')->textInput() ?>
 

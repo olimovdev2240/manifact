@@ -57,16 +57,17 @@ class DefaultController extends Controller
         }
         $to = date("Y-m-d", strtotime($to . "+1day"));
         // masulotlar va ularga sarflangan ish haqlari hisoblanyapti
-        $sql = "SELECT p.name_uz name_uz, p.name_ru name_ru, p.sale_price, SUM(pp.salary * pp.qty) all_salary FROM `production_proccess` pp 
+        $sql = "SELECT p.id id, p.name_uz name_uz, p.name_ru name_ru, p.sale_price, SUM(pp.salary * pp.qty) all_salary FROM `production_proccess` pp 
         LEFT JOIN products p
         ON p.id = pp.product_id
         WHERE counted_at <= '{$to}' AND counted_at >= '{$from}'
         GROUP BY pp.product_id";
         $outlays = $this->getOutlaysByDate($from, $to);
         $products = Yii::$app->db->createCommand($sql)->queryAll();
-        $firstPricing = $this->getFirstProductFee($outlays['summa'], $products);
+        $fee = $this->productFee($outlays['summa'], $products, $from, $to);
         return $this->render('fee', [
             'products' => $products,
+            'fee' => $fee,
             'outlays' => $outlays,
             'from' => $from,
             'to' => $to,
@@ -93,20 +94,82 @@ class DefaultController extends Controller
         ];
         
     }
-    private function getFirstProductFee($summa, $products){
+    private function productFee($summa, $products, $from, $to){
+        $myFee = [];
+
         $sql = "SELECT ps.*, ps.name_uz, ps.name_ru FROM pricing  p
         LEFT JOIN stages s
         ON s.id = p.stage_id
         LEFT JOIN products ps
         ON ps.id = p.product_id
-        WHERE place = 1";
-        $products = Yii::$app->db->createCommand($sql)->queryAll();
-        echo "<pre>";
-        print_r($products);
-        echo "</pre>";
-        exit();
-        foreach($products as $p){
-
+        WHERE place = 1
+        GROUP BY ps.id ";
+        $myproducts = Yii::$app->db->createCommand($sql)->queryAll();
+        // echo "<pre>";
+        // print_r($products);
+        // echo "</pre>";
+        // exit();
+        foreach($myproducts as $p){
+            $fee = 0;
+            //nechta chiqqan va 1 donasi uchun oylik
+            $sql = "SELECT sum(salary*qty)/sum(qty) maosh, sum(qty*salary) summa, sum(qty) dona FROM production_proccess where product_id = ". $p['id'] ." and counted_at >= '{$from}' and counted_at <='{$to}'";
+            $mySalary = Yii::$app->db->createCommand($sql)->queryOne();
+            //necha pul materialga ketgan
+            $sql = "SELECT sum(price*qty) summa, sum(qty) miqdor from attached where product = ".$p['id']." and date >= '{$from}' and date<= '{$to}'";
+            $myMaterial = Yii::$app->db->createCommand($sql)->queryOne();
+            // echo "<pre>";
+            // print_r($mySalary);
+            // print_r($myMaterial);
+            // echo "</pre>";
+            if($mySalary['dona'] != 0){
+                $fee = ($mySalary['summa'] + $myMaterial['summa'])/$mySalary['dona'];
+            }else{
+                $mySalary['maosh'] + $myMaterial['summa'];
+            } 
+            // exit();
+            array_push($myFee, ['id' => $p['id'], 'fee' => $fee]);
         }
+
+        $sql = "SELECT *, ps.name_uz, ps.name_ru FROM pricing  p
+        LEFT JOIN stages s
+        ON s.id = p.stage_id
+        LEFT JOIN products ps
+        ON ps.id = p.product_id
+        WHERE place != 1
+        GROUP BY ps.id ";
+        $myproducts = Yii::$app->db->createCommand($sql)->queryAll();
+        // echo "<pre>";
+        // print_r($myproducts);
+        // echo "</pre>";
+        // exit();
+        foreach($myproducts as $p){
+            $fee = 0;
+            //nechta chiqqan va 1 donasi uchun oylik
+            $sql = "SELECT sum(salary*qty)/sum(qty) maosh, sum(qty*salary) summa, sum(qty) dona FROM production_proccess where product_id = ". $p['id'] ." and counted_at >= '{$from}' and counted_at <='{$to}'";
+            $mySalary = Yii::$app->db->createCommand($sql)->queryOne();
+            //necha pul materialga ketgan
+            $sql = "SELECT sum(price*qty) summa, sum(qty) miqdor from attached where product = ".$p['id']." and date >= '{$from}' and date<= '{$to}'";
+            $myMaterial = Yii::$app->db->createCommand($sql)->queryOne();
+            // echo "<pre>";
+            // print_r($mySalary);
+            // print_r($myMaterial);
+            // echo "</pre>";
+
+            //avvalgidan bunga nechta o`tadi
+            $sql = "select sale_price from products where id = ". $p['convertme'];
+            $beforeProduct = Yii::$app->db->createCommand($sql)->queryScalar()/ $p['goal'];
+            if($mySalary['dona'] != 0){
+                $fee = ($mySalary['summa'] + $myMaterial['summa'])/$mySalary['dona'] + $beforeProduct; 
+            }else{
+                $fee = $beforeProduct + $mySalary['maosh'];
+            }
+            array_push($myFee, ['id' => $p['id'], 'fee' => $fee]);
+        }
+
+        // echo "<pre>";
+        // print_r($myFee);
+        // echo "</pre>";
+        // exit();
+        return $myFee;
     }
 }

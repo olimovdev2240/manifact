@@ -4,6 +4,7 @@ namespace backend\modules\base\controllers;
 
 use backend\models\Products;
 use backend\models\ProductsSearch;
+use backend\models\Types;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -71,9 +72,10 @@ class ProductsController extends Controller
     {
         $model = new Products();
         $products = ArrayHelper::map(Products::find()->all(), 'id', 'name_uz');
+        $types = ArrayHelper::map(Types::find()->all(), 'id', 'name_'.Yii::$app->language);
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                $model->convertme = json_encode($_POST['Products']['convertme']);
+                // $model->convertme = json_encode($_POST['Products']['convertme']);
                 // echo "<pre>";
                 // print_r($model);
                 // echo "</pre>";
@@ -87,6 +89,7 @@ class ProductsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'types' => $types,
             'products' => $products,
         ]);
     }
@@ -101,11 +104,11 @@ class ProductsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->convertme = json_decode($model->convertme);
+        // $model->convertme = json_decode($model->convertme);
         $products = ArrayHelper::map(Products::find()->all(), 'id', 'name_uz');
 
         if ($this->request->isPost && $model->load($this->request->post())) {
-            $model->convertme = json_encode($model->convertme);
+            // $model->convertme = json_encode($model->convertme);
             $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }

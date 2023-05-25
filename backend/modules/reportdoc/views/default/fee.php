@@ -1,7 +1,13 @@
 <?
-
 use kartik\daterange\DateRangePicker;
-
+function getFeeById($id, $array){
+    foreach($array as $a){
+        if($a['id']==$id){
+            return $a['fee'];
+        }
+    }
+    return 0;
+}
 ?>
 <!-- Page header start -->
 <div class="page-header">
@@ -62,7 +68,12 @@ use kartik\daterange\DateRangePicker;
                     <? foreach ($products as $p) : ?>
                         <tr>
                             <td><?= $p['name_' . Yii::$app->language] ?></td>
-                            <td><input type="number" value="<?= $p['sale_price'] ?>"></td>
+                            <? $thisFee = getFeeById($p['id'], $fee); ?>
+                            <td><input type="number" value="<? if($thisFee != 0){
+                                echo round($thisFee);
+                            }else{
+                                echo $p['sale_price'];
+                            } ?>"></td>
                             <td><?= $p['all_salary'] ?> <?=Yii::t('app', 'so`m')?></td>
                         </tr>
                     <? endforeach ?>
