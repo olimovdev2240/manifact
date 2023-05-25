@@ -33,6 +33,12 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'birth')->input('date') ?>
         </div>
         <div class="col-lg-4 col-md-6 col-12">
+            <?= $form->field($model, 'salary_of_day')->textInput() ?>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <?= $form->field($model, 'type_of_work')->radioList(['0'=>Yii::t('app', 'Ishbay'), '1'=>Yii::t('app', 'Kunbay')]) ?>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
             <?= $form->field($model, 'photo')->fileInput() ?>
         </div>
         <div class="col-md-12 col-lg-6 col-12">

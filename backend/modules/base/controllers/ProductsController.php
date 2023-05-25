@@ -106,7 +106,7 @@ class ProductsController extends Controller
         $model = $this->findModel($id);
         // $model->convertme = json_decode($model->convertme);
         $products = ArrayHelper::map(Products::find()->all(), 'id', 'name_uz');
-
+        $types = ArrayHelper::map(Types::find()->all(), 'id', 'name_'.Yii::$app->language);
         if ($this->request->isPost && $model->load($this->request->post())) {
             // $model->convertme = json_encode($model->convertme);
             $model->save();
@@ -115,6 +115,7 @@ class ProductsController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'types' => $types,
             'products' => $products,
         ]);
     }

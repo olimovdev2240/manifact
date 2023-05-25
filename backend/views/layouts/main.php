@@ -204,6 +204,9 @@ $product_remains = Yii::$app->db->createCommand("SELECT br.*, p.name_uz, SUM(br.
                                         <li>
                                             <a href="/reportdoc/salary"><?= Yii::t('app', 'Oylik hisoblash') ?></a>
                                         </li>
+                                        <li>
+                                            <a href="/hr/come-report"><?= Yii::t('app', 'Keldi ketti hisoboti') ?></a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>

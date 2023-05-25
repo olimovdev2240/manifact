@@ -38,6 +38,9 @@ $this->title = 'Dashboard';
 
 	<!-- Row start -->
 	<div class="row gutters">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+			<a href="/hr/come-report/come-myself" class="btn btn-success"> <i class="icon-user-check"></i> <?= Yii::t('app', 'Men keldim') ?></a>
+		</div>
 		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			<div class="accordion" id="defaultAccordion">
 				<div class="accordion-container">

@@ -10,6 +10,8 @@ use Yii;
  * @property int $id
  * @property int $user_id Foydalanuvchi
  * @property double $earn Ish haqi
+ * @property int $type_of_work Ish turi
+ * @property double $salary_of_day Kunlik ish haqi
  * @property string|null $full_name FIO
  * @property string|null $phone Telefon raqam
  * @property string|null $passport Passport seriya
@@ -19,6 +21,9 @@ use Yii;
  */
 class Workers extends \yii\db\ActiveRecord
 {
+    public const WORKLY = 0;
+    public const DAYLY = 1;
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +42,7 @@ class Workers extends \yii\db\ActiveRecord
             [['user_id'], 'integer'],
             [['address', 'parent'], 'string'],
             [['birth'], 'safe'],
-            [['earn'], 'safe'],
+            [['earn', 'type_of_work', 'salary_of_day'], 'safe'],
             [['full_name'], 'string', 'max' => 255],
             [['phone', 'passport'], 'string', 'max' => 20],
             [['photo'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, bmp'],
@@ -69,6 +74,8 @@ class Workers extends \yii\db\ActiveRecord
             'phone' => Yii::t('app', 'Telefon raqam'),
             'passport' => Yii::t('app', 'Passport seriya'),
             'photo' => Yii::t('app', 'Rasm'),
+            'type_of_work' => Yii::t('app', 'Ish turi'),
+            'salary_of_day' => Yii::t('app', 'Kunlik ish haqi'),
             'address' => Yii::t('app', 'Manzil'),
             'birth' => Yii::t('app', 'Tug`ilgan sana'),
             'parent' => Yii::t('app', 'Ota-onasining malumotlari'),

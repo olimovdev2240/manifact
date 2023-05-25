@@ -49,6 +49,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'full_name',
             'phone',
             'passport',
+            // 'type_of_work',
+            [
+                'attribute' => 'type_of_work',
+                'format' => 'html',
+                'value' => function ($data) {
+                    if(!$data->type_of_work) return Yii::t('app', 'Ishbay');
+                    return Yii::t('app', 'Kunbay');
+                }
+            ],
+            'salary_of_day',
             // 'photo',
             [
                 'attribute' => 'photo',
